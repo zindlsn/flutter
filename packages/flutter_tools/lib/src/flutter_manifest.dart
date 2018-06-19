@@ -87,17 +87,28 @@ class FlutterManifest {
     return _flutterDescriptor['uses-material-design'] ?? false;
   }
 
+  /// Properties concerning the embedding of the Flutter app on Android.
   Map<String, dynamic> get androidDescriptor {
     return _flutterDescriptor.containsKey('android')
         ? _flutterDescriptor['android'] ?? const <String, dynamic>{}
         : null;
   }
 
-  Map<String, dynamic> get iosDescriptor {
-    return _flutterDescriptor.containsKey('ios')
-      ? _flutterDescriptor['ios'] ?? const <String, dynamic>{}
-      : null;
+  /// Properties concerning the embedding of this Flutter project into native
+  /// apps.
+  ///
+  /// A project is declared a module when it has a "module" descriptor
+  /// A module Flutter project supports integration into an existing app
+  ///
+  /// Such a project can be created from the module template.
+  Map<String, dynamic> get moduleDescriptor {
+    return _flutterDescriptor.containsKey('module')
+        ? _flutterDescriptor['module'] ?? const <String, dynamic>{}
+        : null;
   }
+
+  /// True if this manifest declares a Flutter module project.
+  bool get isModule => moduleDescriptor != null;
 
   List<Map<String, dynamic>> get fontsDescriptor {
    return _flutterDescriptor['fonts'] ?? const <Map<String, dynamic>>[];

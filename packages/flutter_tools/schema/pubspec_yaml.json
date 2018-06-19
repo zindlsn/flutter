@@ -46,7 +46,7 @@
                 "android": {
                     "type": "object"
                 },
-                "ios": {
+                "module": {
                     "oneOf": [
                         { "type": "object" },
                         { "type": "null" }

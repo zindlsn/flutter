@@ -64,15 +64,15 @@ class FlutterProject {
     }
     final FlutterManifest manifest = await FlutterManifest.createFromPath(directory.childFile('pubspec.yaml').path);
     final Map<String, dynamic> androidDescriptor = manifest.androidDescriptor;
-    if (androidDescriptor != null && shouldRegenerateAndroidDirectory()) {
+    if (manifest.isModule && shouldRegenerateAndroidDirectory()) {
       await android._injectModuleWrapper(<String, dynamic>{
         'androidIdentifier': androidDescriptor['package'],
       });
     }
-    if (manifest.iosDescriptor != null) {
+    if (manifest.isModule) {
       await ios._injectModuleWrapper(<String, dynamic>{});
     }
-    injectPlugins(directory: directory.path);
+    injectPlugins(directory: directory.path, manifest: manifest);
     await generateXcodeProperties(directory.path);
   }
 

@@ -294,7 +294,7 @@ void injectPlugins({String directory, @required FlutterManifest manifest}) {
     _writeIOSPluginRegistrant(directory, manifest, plugins);
     final CocoaPods cocoaPods = new CocoaPods();
     if (plugins.isNotEmpty)
-      cocoaPods.setupPodfile(directory);
+      cocoaPods.setupPodfile(directory, manifest);
     if (changed)
       cocoaPods.invalidatePodInstallOutput(directory);
   }

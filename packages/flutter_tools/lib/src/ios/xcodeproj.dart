@@ -34,12 +34,13 @@ String _generatedXcodePropertiesPath(String projectPath) {
 
 /// Writes default Xcode properties files in the Flutter project at [projectPath],
 /// if project is an iOS project and such files do not already exist.
-Future<void> generateXcodeProperties(String projectPath) async {
+void generateXcodeProperties(String projectPath, FlutterManifest manifest) {
   if (fs.isDirectorySync(fs.path.join(projectPath, 'ios'))) {
     if (fs.file(_generatedXcodePropertiesPath(projectPath)).existsSync())
       return;
-    await updateGeneratedXcodeProperties(
+    updateGeneratedXcodeProperties(
       projectPath: projectPath,
+      manifest: manifest,
       buildInfo: BuildInfo.debug,
       targetOverride: bundle.defaultMainPath,
     );
@@ -50,11 +51,12 @@ Future<void> generateXcodeProperties(String projectPath) async {
 ///
 /// targetOverride: Optional parameter, if null or unspecified the default value
 /// from xcode_backend.sh is used 'lib/main.dart'.
-Future<void> updateGeneratedXcodeProperties({
+void updateGeneratedXcodeProperties({
   @required String projectPath,
+  @required FlutterManifest manifest,
   @required BuildInfo buildInfo,
   String targetOverride,
-}) async {
+}) {
   final StringBuffer localsBuffer = new StringBuffer();
 
   localsBuffer.writeln('// This is a generated file; do not edit or check into version control.');
@@ -77,14 +79,11 @@ Future<void> updateGeneratedXcodeProperties({
 
   localsBuffer.writeln('SYMROOT=\${SOURCE_ROOT}/../${getIosBuildDirectory()}');
 
-  localsBuffer.writeln('FLUTTER_FRAMEWORK_DIR=${flutterFrameworkDir(buildInfo.mode)}');
-
-  final String flutterManifest = fs.path.join(projectPath, bundle.defaultManifestPath);
-  FlutterManifest manifest;
-  try {
-    manifest = await FlutterManifest.createFromPath(flutterManifest);
-  } catch (error) {
-    throwToolExit('Failed to load pubspec.yaml: $error');
+  if (!manifest.isModule) {
+    // For module projects we do not want to write the FLUTTER_FRAMEWORK_DIR
+    // explicitly. Rather we rely on the xcode backend script and the Podfile
+    // logic to derive it from FLUTTER_ROOT and FLUTTER_BUILD_MODE.
+    localsBuffer.writeln('FLUTTER_FRAMEWORK_DIR=${flutterFrameworkDir(buildInfo.mode)}');
   }
 
   final String buildName = buildInfo?.buildName ?? manifest.buildName;

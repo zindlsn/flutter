@@ -20,6 +20,7 @@ import '../base/process.dart';
 import '../base/process_manager.dart';
 import '../base/utils.dart';
 import '../build_info.dart';
+import '../flutter_manifest.dart';
 import '../globals.dart';
 import '../plugins.dart';
 import '../services.dart';
@@ -189,6 +190,7 @@ Future<XcodeBuildResult> buildXcodeProject({
   BuildableIOSApp app,
   BuildInfo buildInfo,
   String targetOverride,
+  FlutterManifest manifest,
   bool buildForDevice,
   bool codesign = true,
   bool usesTerminalUi = true,
@@ -242,10 +244,11 @@ Future<XcodeBuildResult> buildXcodeProject({
   final Directory appDirectory = fs.directory(app.appDirectory);
   await _addServicesToBundle(appDirectory);
 
-  await updateGeneratedXcodeProperties(
+  updateGeneratedXcodeProperties(
     projectPath: fs.currentDirectory.path,
     buildInfo: buildInfo,
     targetOverride: targetOverride,
+    manifest: manifest,
   );
 
   if (hasPlugins()) {

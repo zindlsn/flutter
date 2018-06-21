@@ -11,6 +11,7 @@ import 'package:flutter_tools/src/base/io.dart';
 import 'package:flutter_tools/src/build_info.dart';
 import 'package:flutter_tools/src/bundle.dart' as bundle;
 import 'package:flutter_tools/src/cache.dart';
+import 'package:flutter_tools/src/flutter_manifest.dart';
 import 'package:flutter_tools/src/ios/xcodeproj.dart';
 import 'package:mockito/mockito.dart';
 import 'package:platform/platform.dart';
@@ -285,8 +286,11 @@ Information about project "Runner":
       when(mockArtifacts.getArtifactPath(Artifact.flutterFramework, TargetPlatform.ios, typed(any))).thenReturn('engine');
       when(mockArtifacts.engineOutPath).thenReturn(fs.path.join('out', 'ios_profile_arm'));
       const BuildInfo buildInfo = const BuildInfo(BuildMode.debug, null, targetPlatform: TargetPlatform.ios);
-      await updateGeneratedXcodeProperties(
+      final String pubspecPath = fs.path.join('path/to/project', bundle.defaultManifestPath);
+      final FlutterManifest manifest = await FlutterManifest.createFromPath(pubspecPath);
+      updateGeneratedXcodeProperties(
         projectPath: 'path/to/project',
+        manifest: manifest,
         buildInfo: buildInfo,
       );
 
@@ -304,8 +308,11 @@ Information about project "Runner":
         trackWidgetCreation: true,
         targetPlatform: TargetPlatform.ios,
       );
-      await updateGeneratedXcodeProperties(
+      final String pubspecPath = fs.path.join('path/to/project', bundle.defaultManifestPath);
+      final FlutterManifest manifest = await FlutterManifest.createFromPath(pubspecPath);
+      updateGeneratedXcodeProperties(
         projectPath: 'path/to/project',
+        manifest: manifest,
         buildInfo: buildInfo,
       );
 
@@ -320,8 +327,11 @@ Information about project "Runner":
       when(mockArtifacts.getArtifactPath(Artifact.flutterFramework, TargetPlatform.ios, typed(any))).thenReturn('engine');
       when(mockArtifacts.engineOutPath).thenReturn(fs.path.join('out', 'ios_profile_arm'));
       const BuildInfo buildInfo = const BuildInfo(BuildMode.debug, null, targetPlatform: TargetPlatform.ios);
-      await updateGeneratedXcodeProperties(
+      final String pubspecPath = fs.path.join('path/to/project', bundle.defaultManifestPath);
+      final FlutterManifest manifest = await FlutterManifest.createFromPath(pubspecPath);
+      updateGeneratedXcodeProperties(
         projectPath: 'path/to/project',
+        manifest: manifest,
         buildInfo: buildInfo,
       );
 
@@ -336,8 +346,11 @@ Information about project "Runner":
       when(mockArtifacts.getArtifactPath(Artifact.flutterFramework, TargetPlatform.ios, typed(any))).thenReturn('engine');
       when(mockArtifacts.engineOutPath).thenReturn(fs.path.join('out', 'ios_profile'));
       const BuildInfo buildInfo = const BuildInfo(BuildMode.debug, null, targetPlatform: TargetPlatform.ios);
-      await updateGeneratedXcodeProperties(
+      final String pubspecPath = fs.path.join('path/to/project', bundle.defaultManifestPath);
+      final FlutterManifest manifest = await FlutterManifest.createFromPath(pubspecPath);
+      updateGeneratedXcodeProperties(
         projectPath: 'path/to/project',
+        manifest: manifest,
         buildInfo: buildInfo,
       );
 
@@ -387,8 +400,11 @@ Information about project "Runner":
     }) async {
       final String projectPath = await createMinimalProject(manifest);
 
-      await updateGeneratedXcodeProperties(
+      final String pubspecPath = fs.path.join(projectPath, bundle.defaultManifestPath);
+      final FlutterManifest parsedManifest = await FlutterManifest.createFromPath(pubspecPath);
+      updateGeneratedXcodeProperties(
         projectPath: projectPath,
+        manifest: parsedManifest,
         buildInfo: buildInfo,
         targetOverride: bundle.defaultMainPath,
       );

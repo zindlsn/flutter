@@ -73,7 +73,7 @@ class FlutterProject {
       await ios._injectModuleWrapper(<String, dynamic>{});
     }
     injectPlugins(directory: directory.path, manifest: manifest);
-    await generateXcodeProperties(directory.path);
+    generateXcodeProperties(directory.path, manifest);
   }
 
   bool shouldRegenerateAndroidDirectory() {
